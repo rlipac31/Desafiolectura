@@ -28,7 +28,6 @@ public class Autor {
             Autor autor = new Autor();
             autor.setNombre(autorDTO.nombre());
 
-            // Convertir fechas de String a Integer
             try {
                 if (autorDTO.fechaNacimiento() != null && !autorDTO.fechaNacimiento().isEmpty()) {
                     autor.setFechaNacimiento(Integer.parseInt(autorDTO.fechaNacimiento()));
@@ -52,8 +51,7 @@ public class Autor {
         public void setFechaNacimiento(Integer fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
         public Integer getAnioFallecimiento() { return anioFallecimiento; }
         public void setAnioFallecimiento(Integer anioFallecimiento) { this.anioFallecimiento = anioFallecimiento; }
-       /* public List<Libro> getLibros() { return libros; }
-        public void setLibros(List<Libro> libros) { this.libros = libros; }*/
+
 
     public Set<Libro> getLibros() {
         return libros;

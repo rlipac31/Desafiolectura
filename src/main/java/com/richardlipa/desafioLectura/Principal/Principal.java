@@ -95,7 +95,7 @@ public class Principal {
     @Transactional
     public void buscarLibroPorTitulo() throws UnsupportedEncodingException {
         System.out.println("Escribe el título del libro que deseas buscar:");
-        var nombreLibro = teclado.nextLine();
+        String nombreLibro = teclado.nextLine();
         String encodedString = URLEncoder.encode(nombreLibro, StandardCharsets.UTF_8);
         var json = consumoApi.obtenerDatos(BASE_URL + "search=" + encodedString);
 

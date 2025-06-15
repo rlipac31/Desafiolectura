@@ -13,8 +13,9 @@ public enum Lenguaje {
     HOLANDES("nl", "Holandes"),
     PORTUGUES("pt", "Portuguez"),
     ARABE("ar", "ARABE"),
-    CHINO("zh","Chino");
-    // Puedes agregar más lenguajes según necesites
+    CHINO("zh","Chino"),
+    DESCONOCIDO("unk", "Desconocido"); // <-- ¡Añade esta constante!
+
 
 
     private final String codigo;
@@ -25,35 +26,37 @@ public enum Lenguaje {
         this.nombre = nombre;
     }
 
-    @JsonValue // Usado para serialización
+    @JsonValue
     public String getCodigo() {
         return codigo;
     }
 
-    // --- ¡LA CLAVE ESTÁ AQUÍ! Sobrescribe el método toString() ---
     @Override
     public String toString() {
-        return nombre; // Imprime el nombre legible del idioma
+        return nombre;
     }
 
-    @JsonCreator // Usado para deserialización
+    @JsonCreator
     public static Lenguaje fromCodigo(String codigo) {
         for (Lenguaje lenguaje : Lenguaje.values()) {
             if (lenguaje.codigo.equalsIgnoreCase(codigo)) {
                 return lenguaje;
             }
         }
-        throw new IllegalArgumentException("Código de lenguaje no válido: " + codigo);
+
+        System.err.println("Advertencia: Código de lenguaje no válido o no soportado: " + codigo); // Opcional: loggear la advertencia
+        return DESCONOCIDO;
     }
 
-    // Mantén tus otros métodos si los necesitas
+
     public static Lenguaje fromEspaniol(String text) {
         for (Lenguaje lenguaje : Lenguaje.values()) {
             if (lenguaje.nombre.equalsIgnoreCase(text)) {
                 return lenguaje;
             }
         }
-        throw new IllegalArgumentException("Nombre de lenguaje no válido: " + text);
+        System.err.println("Advertencia: Nombre de lenguaje en español no válido o no soportado: " + text);
+        return DESCONOCIDO;
     }
 
 
