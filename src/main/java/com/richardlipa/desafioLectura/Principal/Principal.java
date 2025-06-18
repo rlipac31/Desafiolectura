@@ -120,14 +120,7 @@ public void buscarLibroPorTitulo() throws UnsupportedEncodingException {
             System.out.println("----------Libro-----------\n");
             System.out.println("Titulo: " + libroSave.getTitulo());
 
-            // --- ¡CORRECCIÓN AQUÍ! ---
-            // Recopila los nombres de los autores en una sola cadena, separados por ", "
-            String nombresAutores = libroSave.getAutores().stream()
-                    .map(a -> a.getNombre())
-                    .collect(Collectors.joining(" y "));
-            System.out.println("Autor/Autores: " + nombresAutores);
-            // --- FIN DE LA CORRECCIÓN ---
-
+            System.out.println("Autor/Autores: "+  libroSave.getAutor().getNombreAutor());
             // También corrige Idioma si Lenguajes es una lista de enums y quieres los nombres legibles
             String nombresIdiomas = libroSave.getLenguajes().stream()
                     .map(lenguaje -> lenguaje.toString()) // Asumiendo que Lenguaje es un enum
@@ -148,47 +141,19 @@ public void buscarLibroPorTitulo() throws UnsupportedEncodingException {
 @Transactional // Asegúrate de que tu método principal esté @Transactional
 private void listarLibrosReGegistrados() {
     List<Libro> listaDeLibrosEnBD = libroService.listarLibrosBD();
-   System.out.println("--- Detalles Completos de Libros, Autores e Idiomas ---");
-    listaDeLibrosEnBD.stream()
-            .forEach(l -> { // Cambiado a forEach ya que map + collect toList no es necesario para efectos secundarios (imprimir)
-                // Obtiene los nombres de los autores y los une en una sola cadena separados por ", "
-                String autoresNombres = l.getAutores().stream()
-                        .map(autor -> autor.getNombre())
-                        .collect(Collectors.joining(" y "));
+   System.out.println("--- Detalles Completos de Libros, Autores e Idiomas ---\n");
+   listaDeLibrosEnBD.forEach(libro -> {
+       System.out.println("**** Libro ****");
+       System.out.println("Titulo: " + libro.getTitulo());
+       System.out.println("Autor: " + libro.getAutor().getNombreAutor());
+       System.out.println("Idioma: " + libro.getLenguajes().get(0));
+       System.out.println("TotalDescargas: " + libro.getTotalDescargas());
+       System.out.println("**** Libro ****");
 
-                // Obtiene los nombres de los lenguajes (idiomas) y los une en una sola cadena
-                // Asumiendo que 'Lenguaje' es un enum, toString() te dará su nombre
-                String lenguajesNombres = l.getLenguajes().stream()
-                        .map(lenguaje -> lenguaje.toString())
-                        .collect(Collectors.joining(", "));
 
-                // Imprime la información formateada del libro
-                // %n asegura un salto de línea compatible con diferentes sistemas operativos
-                String linea = "\n------------ Libro ----------";
-                System.out.printf(" %s \nId: %s  Titulo: %s  \nAutor: %s \nIdioma: %s \nTotalDescargas %s %s%n",
-                        linea,
-                        l.getId(),
-                        l.getTitulo(),
-                        autoresNombres,
-                        lenguajesNombres,
-                        l.getTotalDescargas(),
-                        linea
-                );
-            });
+   });
 
-    //  List<Object[]> resultados = libroService.listarLibrosBD();
-
-   /* System.out.println("--- Detalles Completos de Libros, Autores e Idiomas ---");
-    for (Object[] fila : resultados) {
-        Long idLibro = (Long) fila[0];
-        String titulo = (String) fila[1];
-        String nombreAutor = (String) fila[2];
-        String idioma = (String) fila[3]; // O Lenguaje, dependiendo de cómo lo devuelva la BD
-
-        System.out.printf("Libro ID: %d, Titulo: %s, Autor: %s, Idioma: %s%n",
-                idLibro, titulo, nombreAutor, idioma);
-    }
-    System.out.println("-------------------------------------------------------");*/
+    System.out.println("-------------------------------------------------------");//*
 }
 
 
@@ -196,28 +161,27 @@ private void listarLibrosReGegistrados() {
         private void liostarAutoresRegistrados() {
            List<Autor> listaDeAutores=libroService.listarAutoresBD();
             System.out.println("--- Autores Registrados en la BD  ---");
-            listaDeAutores.stream()
-                    .forEach(a -> {
-                        String linea = "\n------------ Autor ----------";
-                        System.out.printf(" %s \nId: %s  Nombre: %s  \nNacimiento: %s \nFallecimiento: %s  %s%n",
-                                linea,
-                                a.getId(),
-                                a.getNombre(),
-                                a.getFechaNacimiento(),
-                                a.getAnioFallecimiento(),
-                                linea
-                        );
-                    });
-        }
+            listaDeAutores.forEach(a -> {
+                String linea = "\n------------ Autor ----------";
+                System.out.printf(" %s \nId: %s  Nombre: %s  \nNacimiento: %s \nFallecimiento: %s  %s%n",
+                        linea,
+                        a.getId(),
+                        a.getNombreAutor(),
+                        a.getFechaNacimiento(),
+                        a.getAnioFallecimiento(),
+                        linea
+                           );
+               });
 
+    }
         private void listarAutoresVivosEnAnio() {
             //System.out.println("******* Buscando Autores vivos por intervalo de tiempo,  Ejemplo: 1850 - 1900");
             System.out.println("******* Buscando Autores vivos en un anio determinado en la Api Gutendex,  Ejemplo: 1851");
             System.out.println("Ingresa el primer anio ...solo se aceptan numeros");
             int intervalo1 = teclado.nextInt();
-          /*  System.out.println("Ingresa el segundo  anio ...solo se aceptan numeros");
-            int intervalo2 = teclado.nextInt();*/
-            var json = consumoApi.obtenerDatos(BASE_URL + "author_year_start" + intervalo1 + "&author_year_end" + intervalo1);
+           System.out.println("Ingresa el segundo  anio ...solo se aceptan numeros");
+            int intervalo2 = teclado.nextInt();//*
+            var json = consumoApi.obtenerDatos(BASE_URL + "author_year_start" + intervalo1 + "&author_year_end" + intervalo2);
             System.out.println("Json Autores " + json);
 
             DatosDTO datos = convertir.obtenerDatos(json, DatosDTO.class);
@@ -227,7 +191,7 @@ private void listarLibrosReGegistrados() {
 
             /// formato tabla
             System.out.println("---------------------------------------------------------------------------------------------------");
-            System.out.printf("%-20s %-20s %-10s%n", "Autor", "Fecha nacimiento", "Fecha de Muerte");
+            System.out.printf("%-50s %-40s %-10s%n", "Autor", "Fecha nacimiento", "Fecha de Muerte");
             System.out.println("---------------------------------------------------------------------------------------------------");
             datos.libros().forEach(l -> { // Cambiado a forEach ya que map + collect toList no es necesario para efectos secundarios (imprimir)
                 // Obtiene los nombres de los autores y los une en una sola cadena separados por ", "
@@ -243,7 +207,7 @@ private void listarLibrosReGegistrados() {
                 // Definir un ancho fijo para las columnas
 
 
-                System.out.printf("%-60s %-40s %-10s%n",
+                System.out.printf("%-50s %-40s %-10s%n",
                         autoresNombres, autoresNacimiento, autoresMuerte);
 
             });
@@ -256,18 +220,20 @@ private void listarLibrosReGegistrados() {
         Integer anioBusqueda = teclado.nextInt();
 
         List<Autor> autoresVivos = libroService.listarAutoresVivosPorAnioBD( anioBusqueda);
-        autoresVivos.stream()
-                .forEach(a -> {
-                    String linea = "\n------------ Autor ----------";
-                    System.out.printf(" %s \nId: %s  Nombre: %s  \nNacimiento: %s \nFallecimiento: %s  %s%n",
-                            linea,
+        /// formato tabla
+        System.out.println("---------------------------------------------------------------------------------------------------");
+        System.out.printf("%-5s %-40s %-30s %-10s%n", "Id", "Autor", "Fecha nacimiento", "Fecha de Muerte");
+        System.out.println("---------------------------------------------------------------------------------------------------");
+        autoresVivos.forEach(a -> {
+                    System.out.printf("%-5s %-40s %-30s %-10s%n",
                             a.getId(),
-                            a.getNombre(),
+                            a.getNombreAutor(),
                             a.getFechaNacimiento(),
-                            a.getAnioFallecimiento(),
-                            linea
+                            a.getAnioFallecimiento()
+
                     );
                 });
+        System.out.println("\n---------------------------------------------------------------------------------------------------");
     }
 
         private void listarLibroPorIdioma() {
@@ -313,7 +279,7 @@ private void listarLibrosReGegistrados() {
                 if (datosLibrosPorIdioma != null && datosLibrosPorIdioma.libros() != null && !datosLibrosPorIdioma.libros().isEmpty()) {
                     System.out.println("\n--- Libros encontrados en " + lenguajeSeleccionado.toString() + " ---");
                  //   String linea = "\n************ Libro ***********\n";
-                   /* datosLibrosPorIdioma.libros().forEach(libro -> {
+                /*  datosLibrosPorIdioma.libros().forEach(libro -> {
                         String autores = libro.autores().stream()
                                 .map(a -> a.nombre())
                                 .collect(Collectors.joining(", "));
@@ -360,21 +326,21 @@ private void listarLibrosReGegistrados() {
     private void listarLibroPorNombreAutor() {
         System.out.println("Ingrese el nombre del autor para buscar sus libros ");
         String nombreAutor = teclado.nextLine();
-        List<Object[]> libros = libroService.listarLibroPorAutor(nombreAutor);
+        List<Libro> libros = libroService.listarLibroPorAutor(nombreAutor);
         System.out.println("--- Detalles Completos de Libros, Autores e Idiomas ---");
         System.out.println("libros bd Autor "+libros);
+        System.out.println("--- Libros por autor ---\n");
+        libros.forEach(libro -> {
+            System.out.println("**** Libro ****");
+            System.out.println("Titulo: " + libro.getTitulo());
+            System.out.println("Autor: " + libro.getAutor().getNombreAutor());
+            System.out.println("Idioma: " + libro.getLenguajes().get(0));
+            System.out.println("TotalDescargas: " + libro.getTotalDescargas());
+            System.out.println("**** Libro ****");
+
+        });
 
 
-    System.out.println("--- Detalles Completos de Libros, Autores e Idiomas ---");
-    for (Object[] fila : libros) {
-        Long idLibro = (Long) fila[0];
-        String titulo = (String) fila[1];
-        String autor = (String) fila[2];
-        String idioma = (String) fila[3]; // O Lenguaje, dependiendo de cómo lo devuelva la BD
-
-        System.out.printf("Libro ID: %d, Titulo: %s, Autor: %s, Idioma: %s%n",
-                idLibro, titulo, autor, idioma);
-    }
     System.out.println("-------------------------------------------------------");
 
 
