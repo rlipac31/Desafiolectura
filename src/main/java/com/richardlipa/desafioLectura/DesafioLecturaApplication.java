@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 * */
 
 @SpringBootApplication
-public class 1
+public class
 DesafioLecturaApplication implements CommandLineRunner {
 
 	// Inyecta la instancia de Principal (ya que ahora es un @Component)
