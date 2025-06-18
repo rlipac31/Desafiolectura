@@ -22,8 +22,8 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
         JOIN libro_lenguajes ll ON l.id = ll.libro_id
         """, nativeQuery = true)
     List<Object[]> listarLibros();
-
-/*    @Query(value = """
+/*
+    @Query(value = """
             SELECT
                 l.id,
                 l.titulo,
@@ -36,7 +36,7 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
             JOIN
                 l.lenguajes lang
             WHERE
-                a.nombre ILIKE ':nombreAutor'
+                a.nombre ILIKE :nombreAutor
             """)*/
     @Query(value = """
               SELECT
@@ -54,4 +54,5 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
 
     List<Object[]> librosPorAutor( @Param("nombreAutor") String nombreAutor);
 
+    List<Libro> findByAutor_NombreAutorStartingWithIgnoreCase(String nombreAutor);
 }

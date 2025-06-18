@@ -1,5 +1,6 @@
 package com.richardlipa.desafioLectura.Service;
 
+import com.richardlipa.desafioLectura.DTO.AutorDTO;
 import com.richardlipa.desafioLectura.DTO.LibroDTO;
 import com.richardlipa.desafioLectura.Repository.AutorRepository;
 import com.richardlipa.desafioLectura.Repository.LibroRepository;
@@ -31,35 +32,39 @@ public class LibroService {
                     System.out.println("Libro con el titulo: "+ libroExiste.get().getTitulo() +" ya esta registrado en la BD");
                     return null;
                 }
-            // Procesar cada autor del DTO
-            libroDTO.autores().forEach(autorDTO -> {
+            Autor autor = null;
+            if (libroDTO.autores() != null && !libroDTO.autores().isEmpty()) {
+                AutorDTO autorDTO = libroDTO.autores().get(0); // Tomamos el primer autor de la lista
                 // Buscar autor por nombre (asumiendo que el nombre es único)
-                Optional<Autor> autorExistente = autorRepository.findByNombre(autorDTO.nombre());
+                Optional<Autor> autorExistente = autorRepository.findByNombreAutor(autorDTO.nombre());
 
-                Autor autor;
+
                 if (autorExistente.isPresent()) {
                     // Actualizar autor existente
                     autor = autorExistente.get();
-                    // Actualizar otros campos si es necesario
-                    if (autorDTO.fechaNacimiento() != null) {
-                        autor.setFechaNacimiento(Integer.parseInt(autorDTO.fechaNacimiento()));
-                    }
-                    if (autorDTO.anioFallecimiento() != null) {
-                        autor.setAnioFallecimiento(Integer.parseInt(autorDTO.anioFallecimiento()));
-                    }
-                } else {
+                    System.out.println("Autor existente encontrado: " + autor.getNombreAutor());
+
+
+                }else {
+                    AutorDTO miautorDTO = new AutorDTO(autorDTO.nombre(), autorDTO.fechaNacimiento(), autorDTO.anioFallecimiento());
                     // Crear nuevo autor
-                    autor = Autor.fromDTO(autorDTO);
+                  //  autor = new Autor(miautorDTO);
+                    Autor nuevoAutor = Autor.fromDTO(miautorDTO);
+                    libro.setAutor(nuevoAutor);
                 }
 
-                // Establecer relación bidireccional
-                libro.agregarAutor(autor);
-            });
+            }// Procesar cada autor del DTO
+
+
+
 
             return libroRepository.save(libro);
         }
 
-
+       /* public   List<Object[]> listarLibrosBD(){
+           // return  libroRepository.findAll();
+            return  libroRepository.listarLibros();
+        }*/
 
     public  List<Libro> listarLibrosBD(){
         return  libroRepository.findAll();
@@ -74,10 +79,9 @@ public class LibroService {
     public  List<Autor> listarAutoresVivosPorAnioBD(Integer anioBusqueda){
         return autorRepository.listarAutoresVivos(anioBusqueda);
     }
-
+/*
     public List<Object[]> listarLibroPorAutor(String nombreAutor){
         return libroRepository.librosPorAutor(nombreAutor);
     }
-}
 
 

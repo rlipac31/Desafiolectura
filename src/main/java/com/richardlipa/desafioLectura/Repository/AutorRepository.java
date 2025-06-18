@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface AutorRepository extends JpaRepository<Autor, Long> {
 
-    Optional<Autor> findByNombre(String nombre);
+    Optional<Autor> findByNombreAutor(String nombreAutor);
 
     @Query( "SELECT a FROM Autor a WHERE a.fechaNacimiento <= :anioBusqueda AND (a.anioFallecimiento IS NULL OR a.anioFallecimiento > :anioBusqueda)")
     List<Autor> listarAutoresVivos(Integer anioBusqueda);

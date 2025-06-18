@@ -15,18 +15,19 @@ public class Autor {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-        private String nombre;
+        @Column(nullable = false, unique = true)
+        private String nombreAutor;
         private Integer fechaNacimiento;
         private Integer anioFallecimiento;
 
-        @ManyToMany(mappedBy = "autores", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+        @OneToMany(mappedBy = "autor", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
        // private List<Libro> libros = new ArrayList<>();
         private  Set<Libro> libros = new HashSet<>();
 
         // Método para crear Autor desde AutorDTO
         public static Autor fromDTO(AutorDTO autorDTO) {
             Autor autor = new Autor();
-            autor.setNombre(autorDTO.nombre());
+            autor.setNombreAutor(autorDTO.nombre());
 
             try {
                 if (autorDTO.fechaNacimiento() != null && !autorDTO.fechaNacimiento().isEmpty()) {
@@ -45,9 +46,16 @@ public class Autor {
         // Getters y setters
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
-        public String getNombre() { return nombre; }
-        public void setNombre(String nombre) { this.nombre = nombre; }
-        public Integer getFechaNacimiento() { return fechaNacimiento; }
+
+    public String getNombreAutor() {
+        return nombreAutor;
+    }
+
+    public void setNombreAutor(String nombreAutor) {
+        this.nombreAutor = nombreAutor;
+    }
+
+    public Integer getFechaNacimiento() { return fechaNacimiento; }
         public void setFechaNacimiento(Integer fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
         public Integer getAnioFallecimiento() { return anioFallecimiento; }
         public void setAnioFallecimiento(Integer anioFallecimiento) { this.anioFallecimiento = anioFallecimiento; }
@@ -66,7 +74,7 @@ public class Autor {
     public String toString() {
         return
                 "id=" + id +
-                ", nombre='" + nombre + '\'' +
+                ", nombre='" + nombreAutor + '\'' +
                 ", fechaNacimiento=" + fechaNacimiento +
                 ", anioFallecimiento=" + anioFallecimiento
                 ;
