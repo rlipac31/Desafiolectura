@@ -59,10 +59,7 @@ public class LibroService {
             return libroRepository.save(libro);
         }
 
-       /* public   List<Object[]> listarLibrosBD(){
-           // return  libroRepository.findAll();
-            return  libroRepository.listarLibros();
-        }*/
+
 
     public  List<Libro> listarLibrosBD(){
         return  libroRepository.findAll();
@@ -81,6 +78,6 @@ public class LibroService {
     public List<Object[]> listarLibroPorAutor(String nombreAutor){
         return libroRepository.librosPorAutor(nombreAutor);
     }
-
-
 }
+
+

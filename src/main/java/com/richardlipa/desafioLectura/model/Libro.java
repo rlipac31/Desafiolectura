@@ -1,6 +1,7 @@
 package com.richardlipa.desafioLectura.model;
 
 
+import com.richardlipa.desafioLectura.DTO.AutorDTO;
 import com.richardlipa.desafioLectura.DTO.LibroDTO;
 import jakarta.persistence.*;
 
@@ -33,7 +34,9 @@ public class Libro {
         private Set<Autor> autores = new HashSet<>();
         private Integer totalDescargas;
 
-        // Método para crear Libro desde LibroDTO
+
+
+    // Método para crear Libro desde LibroDTO
         public static Libro fromDTO(LibroDTO libroDTO) {
             Libro libro = new Libro();
             libro.setTitulo(libroDTO.titulo());

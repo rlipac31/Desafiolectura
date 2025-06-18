@@ -3,6 +3,7 @@ package com.richardlipa.desafioLectura.Repository;
 import com.richardlipa.desafioLectura.model.Libro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,8 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
         JOIN libro_lenguajes ll ON l.id = ll.libro_id
         """, nativeQuery = true)
     List<Object[]> listarLibros();
-/*
-    @Query(value = """
+
+/*    @Query(value = """
             SELECT
                 l.id,
                 l.titulo,
@@ -35,7 +36,7 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
             JOIN
                 l.lenguajes lang
             WHERE
-                a.nombre ILIKE :nombreAutor
+                a.nombre ILIKE ':nombreAutor'
             """)*/
     @Query(value = """
               SELECT
@@ -48,7 +49,9 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
                     JOIN autores a ON la.autor_id = a.id
                     JOIN libro_lenguajes ll ON l.id = ll.libro_id
             		WHERE
-            		 a.nombre ILIKE 'dickens%';
+            		 a.nombre ILIKE :nombreAutor%;
             """, nativeQuery = true)
-    List<Object[]> librosPorAutor(String nombreAutor);
+
+    List<Object[]> librosPorAutor( @Param("nombreAutor") String nombreAutor);
+
 }

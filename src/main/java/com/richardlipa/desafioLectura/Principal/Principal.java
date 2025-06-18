@@ -308,7 +308,7 @@ public class Principal {
     private void listarLibroPorNombreAutor() {
         System.out.println("Ingrese el nombre del autor para buscar sus libros ");
         String nombreAutor = teclado.nextLine();
-        List<Object[]> libros = libroService.listarLibroPorAutor(nombreAutor);
+        List<Object []> libros = libroService.listarLibroPorAutor(nombreAutor);
         System.out.println("--- Detalles Completos de Libros, Autores e Idiomas ---");
         for (Object[] fila : libros) {
             Long idLibro = (Long) fila[0];
@@ -319,7 +319,8 @@ public class Principal {
             System.out.printf("Libro ID: %d, Titulo: %s, Autor: %s, Idioma: %s%n",
                     idLibro, titulo, autor, idioma);
         }
-        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------\n" + libros);
+
 
 
     }
